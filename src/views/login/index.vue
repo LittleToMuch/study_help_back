@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">学习互助管理平台</h3>
       </div>
 
       <el-form-item prop="username">
@@ -54,11 +54,12 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-
+import Axios from 'axios'
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
+      console.log(rule, value)
       if (!validUsername(value)) {
         callback(new Error('Please enter the correct user name'))
       } else {
@@ -75,7 +76,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '43944264'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -100,6 +101,7 @@ export default {
         this.passwordType = ''
       } else {
         this.passwordType = 'password'
+
       }
       this.$nextTick(() => {
         this.$refs.password.focus()
@@ -115,6 +117,7 @@ export default {
           }).catch(() => {
             this.loading = false
           })
+
         } else {
           console.log('error submit!!')
           return false

@@ -43,6 +43,7 @@ export const constantRoutes = [
     hidden: true
   },
 
+
   {
     path: '/',
     component: Layout,
@@ -78,14 +79,74 @@ export const constantRoutes = [
   },
 
   {
-    path: '/form',
+    path: '/user',
+    component: Layout,
+    name: 'User',
+    meta: { title: '用户管理', icon: 'user' },
+    children: [
+      {
+        path: 'normal',
+        name: 'Normal',
+        component: () => import('@/views/user/normal'),
+        meta: { title: '普通用户', icon: 'user' }
+      },
+      {
+        path: 'teacher',
+        name: 'Teacher',
+        component: () => import('@/views/user/teacher'),
+        meta: { title: '教师管理', icon: 'teacher' }
+      }
+    ]
+  },
+
+  {
+    path: '/experience',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'Experience',
+        component: () => import('@/views/experience/index'),
+        meta: { title: '经验百科', icon: 'example' }
+      }
+    ]
+  },
+
+  {
+    path: '/learning',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Learning',
+        component: () => import('@/views/learning/index'),
+        meta: { title: '学习攻略', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/tutsau',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Tutsau',
+        component: () => import('@/views/tutsau/index'),
+        meta: { title: '吐槽管理', icon: 'tutsau' }
+      }
+    ]
+  },
+
+  {
+    path: '/video',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Video',
+        component: () => import('@/views/video/index'),
+        meta: {title: '视频管理', icon: 'video'}
       }
     ]
   },
