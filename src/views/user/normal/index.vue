@@ -31,14 +31,14 @@
       </el-table-column>
       <el-table-column
         label="用户权限"
-        width="150">
+        width="180">
         <template slot-scope="scope">
-          <el-tag type="success">{{ scope.row.role ? '付费用户' : '普通用户' }}</el-tag>
+          <el-tag :type="scope.row.role ? 'warning' : 'success'">{{ scope.row.role ? '付费用户' : '普通用户' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         label="联系方式"
-        width="180">
+        width="220">
         <template slot-scope="scope">
           <span>{{ scope.row.telephone }}</span>
         </template>
@@ -64,6 +64,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      v-if="userList.length"
+      class="pagination"
+      background
+      layout="prev, pager, next"
+      :page-size="pageSize"
+      :total="total"
+      @current-change="currentChange"
+    />
     <Modal v-if="userList.length" :visible.sync="visible" :type="type" :formData="formData" />
   </div>
 </template>
@@ -84,7 +93,10 @@ export default {
       userList: [],
       type: 'edit',
       visible: false,
-      formData: {}
+      formData: {},
+      pageSize: 6,
+      currentPage: 1,
+      total: 0
     }
   },
   mounted() {
@@ -94,9 +106,15 @@ export default {
     async getList() {
       const res = await request({
         url: '/api/users/userList',
-        methods: 'get'
+        methods: 'get',
+        params: { pageSize: this.pageSize, currentPage: this.currentPage }
       })
       this.userList = res.data
+      this.total = res.total
+    },
+    currentChange(page) {
+      this.currentPage = page
+      this.getList()
     },
     handleEdit(index, row) {
       this.formData = row
