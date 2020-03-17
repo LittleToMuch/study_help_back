@@ -101,7 +101,6 @@ export default {
         this.passwordType = ''
       } else {
         this.passwordType = 'password'
-
       }
       this.$nextTick(() => {
         this.$refs.password.focus()
@@ -117,7 +116,6 @@ export default {
           }).catch(() => {
             this.loading = false
           })
-
         } else {
           console.log('error submit!!')
           return false

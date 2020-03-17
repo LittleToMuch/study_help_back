@@ -9,10 +9,11 @@ export function login(data) {
 }
 
 export function getInfo(token) {
+  console.log(token)
   return request({
-    url: '/vue-admin-template/user/info',
+    url: '/api/users/tokenValidate',
     method: 'get',
-    params: { token }
+    headers: { Authorization: token }
   })
 }
 

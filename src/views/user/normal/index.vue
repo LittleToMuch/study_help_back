@@ -1,79 +1,130 @@
 <template>
   <div class="app-container">
     <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-    >
-      <el-table-column align="center" label="ID" width="95">
+      v-if="userList.length"
+      :data="userList"
+      style="width: 100%">
+      <el-table-column
+        label="Id"
+        width="100">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          <span style="margin-left: 10px">{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头像">
+      <el-table-column
+        label="用户名"
+        width="180">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          <el-popover trigger="hover" placement="top" width="150px">
+            <div class="block">
+              <el-image :src="`http://localhost:8080/${scope.row.avatar}`" style="width: 120px">
+                <div slot="placeholder" class="image-slot">
+                  加载中<span class="dot">...</span>
+                </div>
+              </el-image>
+            </div>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">{{ scope.row.username }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" width="110" align="center">
+      <el-table-column
+        label="用户权限"
+        width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <el-tag type="success">{{ scope.row.role ? '付费用户' : '普通用户' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="联系电话" width="110" align="center">
+      <el-table-column
+        label="联系方式"
+        width="180">
         <template slot-scope="scope">
-          {{ scope.row.pageviews }}
+          <span>{{ scope.row.telephone }}</span>
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="权限" width="110" align="center">
+      <el-table-column
+        label="创建日期"
+        width="250">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          <i class="el-icon-time"></i>
+          <span>{{ scope.row.createDate | parsetime }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="创建时间" width="200">
+      <el-table-column label="操作">
         <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <el-button
+            size="mini"
+            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <Modal v-if="userList.length" :visible.sync="visible" :type="type" :formData="formData" />
   </div>
 </template>
 
 <script>
-  import { getList } from '@/api/table'
-
-  export default {
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger'
-        }
-        return statusMap[status]
-      }
+import request from '@/utils/request'
+import { parseTime } from '@/utils/index'
+import Modal from './modal'
+export default {
+  components: { Modal },
+  filters: {
+    parsetime(value) {
+      return parseTime(value)
+    }
+  },
+  data() {
+    return {
+      userList: [],
+      type: 'edit',
+      visible: false,
+      formData: {}
+    }
+  },
+  mounted() {
+    this.getList()
+  },
+  methods: {
+    async getList() {
+      const res = await request({
+        url: '/api/users/userList',
+        methods: 'get'
+      })
+      this.userList = res.data
     },
-    data() {
-      return {
-        list: null,
-        listLoading: true
-      }
+    handleEdit(index, row) {
+      this.formData = row
+      this.visible = true
     },
-    created() {
-      this.fetchData()
-    },
-    methods: {
-      fetchData() {
-        this.listLoading = true
-        getList().then(response => {
-          this.list = response.data.items
-          this.listLoading = false
-        })
-      }
+    handleDelete(index, row) {
+      this.$confirm('确认删除嘛?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        const params = { id: row.id }
+        const res = await request.post('/api/users/delUser', params)
+        const { code, msg } = res
+        this.$message({ message: msg, type: code === 200 ? 'success' : 'warning' })
+        this.getList()
+      }).catch(() => {
+        this.$message({
+          type: 'warning',
+          message: '已取消删除'
+        });          
+      });
     }
   }
+}
 </script>
+<style lang="scss" scoped>
+  .block {
+    width: 100px;
+  }
+</style>

@@ -43,7 +43,6 @@ export const constantRoutes = [
     hidden: true
   },
 
-
   {
     path: '/',
     component: Layout,
@@ -102,6 +101,7 @@ export const constantRoutes = [
   {
     path: '/experience',
     component: Layout,
+    name: 'Experience',
     children: [
       {
         path: 'index',
@@ -115,6 +115,7 @@ export const constantRoutes = [
   {
     path: '/learning',
     component: Layout,
+    name: 'Learning',
     children: [
       {
         path: 'index',
@@ -128,6 +129,7 @@ export const constantRoutes = [
   {
     path: '/tutsau',
     component: Layout,
+    name: 'Tutsau',
     children: [
       {
         path: 'index',
@@ -141,12 +143,13 @@ export const constantRoutes = [
   {
     path: '/video',
     component: Layout,
+    name: 'Video',
     children: [
       {
         path: 'index',
         name: 'Video',
         component: () => import('@/views/video/index'),
-        meta: {title: '视频管理', icon: 'video'}
+        meta: { title: '视频管理', icon: 'video' }
       }
     ]
   },
