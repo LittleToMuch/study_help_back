@@ -74,9 +74,6 @@
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button
-            size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)"
           >删除</el-button>
@@ -99,9 +96,7 @@
 <script>
 import request from '@/utils/request'
 import { parseTime } from '@/utils/index'
-import Modal from './modal'
 export default {
-  components: { Modal },
   filters: {
     parsetime(value) {
       return parseTime(value)

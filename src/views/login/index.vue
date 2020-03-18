@@ -54,7 +54,6 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import Axios from 'axios'
 export default {
   name: 'Login',
   data() {
