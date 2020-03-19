@@ -124,7 +124,7 @@ export default {
         type: 'warning'
       }).then(async() => {
         const params = { id: row.id }
-        const res = await request.post('/api/users/delUser', params)
+        const res = await request.post('/api/admin/del', params)
         const { code, msg } = res
         this.$message({ message: msg, type: code === 200 ? 'success' : 'warning' })
         this.getList()

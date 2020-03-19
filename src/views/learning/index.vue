@@ -89,7 +89,6 @@
       :total="total"
       @current-change="currentChange"
     />
-    <Modal v-if="userList.length" :visible.sync="visible" :type="type" :formData="formData" />
   </div>
 </template>
 
