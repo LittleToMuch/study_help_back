@@ -105,7 +105,7 @@ export default {
   methods: {
     async getList() {
       const res = await request({
-        url: '/api/users/userList',
+        url: '/api/users/list',
         methods: 'get',
         params: { pageSize: this.pageSize, currentPage: this.currentPage }
       })

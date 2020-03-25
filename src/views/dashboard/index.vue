@@ -2,7 +2,7 @@
   <div class="dashboard-container">
     <div class="dashboard-text">欢迎您: {{ `${name}${level === 1 ? '管理员' : '老师'}` }}</div>
     <el-divider />
-    <div id="main" ref="amountData"></div>
+    <div id="main" ref="amountData" />
   </div>
 </template>
 
@@ -18,7 +18,8 @@ export default {
         'learning',
         'tutsau',
         'users',
-        'teacher'
+        'admin',
+        'video'
       ],
       amountOption: {},
       amountChart: null
@@ -36,12 +37,15 @@ export default {
     }
   },
   async created() {
-    const experience = this.getList('/api/experience/list')
-    const learning = this.getList('/api/learning/list')
-    const tutsau = this.getList('/api/tutsau/list')
-    const users = this.getList('/api/users/userList')
-    const teacher = this.getList('/api/admin/list')
-    const res = await Promise.all([experience, learning, tutsau, users, teacher])
+    const apiArr = this.amount.map(item => this.getList(`/api/${item}/list`))
+    console.log(apiArr)
+    // const experience = this.getList('/api/experience/list')
+    // const learning = this.getList('/api/learning/list')
+    // const tutsau = this.getList('/api/tutsau/list')
+    // const users = this.getList('/api/users/userList')
+    // const teacher = this.getList('/api/admin/list')
+    // const video = this.getList('/api/video/list')
+    const res = await Promise.all(apiArr)
     const arr = [...res]
     arr.sort((a, b) => b - a)
     this.amountOption.visualMap.max = arr[0] * 1.5
@@ -99,7 +103,8 @@ export default {
               { value: 0, name: '学习攻略' },
               { value: 0, name: '吐槽' },
               { value: 0, name: '学生' },
-              { value: 0, name: '教师' }
+              { value: 0, name: '教师' },
+              { value: 0, name: '学习视频' }
             ],
             roseType: 'radius',
             label: {

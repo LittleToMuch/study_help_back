@@ -114,7 +114,6 @@ export default {
   },
   mounted() {
     this.getList()
-    console.log(this.$store.state.category)
   },
   methods: {
     async getList() {
@@ -149,8 +148,8 @@ export default {
         this.$message({
           type: 'warning',
           message: '已取消删除'
-        });          
-      });
+        })
+      })
     }
   }
 }

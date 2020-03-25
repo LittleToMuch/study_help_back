@@ -30,11 +30,17 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="密码:" prop="password">
-        <el-input v-model="cloneData.password" />
-      </el-form-item>
-      <el-form-item label="教师头像:" prop="avatar">
+      <el-form-item label="视频海报:" prop="video_pic">
         <Upload ref="upload" @path="handlePath" />
+      </el-form-item>
+      <el-form-item label="视频地址:" prop="video_path">
+        <VideoUpload ref="address" @path="handleVideoAddress" />
+      </el-form-item>
+      <el-form-item label="视频价格:" prop="video_price">
+        <el-input v-model="cloneData.video_price" />
+      </el-form-item>
+      <el-form-item label="视频简介:" prop="video_intro" class="textarea">
+        <el-input v-model="cloneData.video_intro" type="textarea" :rows="3" placeholder="请输入内容" maxlength="50" show-word-limit />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -51,8 +57,10 @@
 <script>
 import request from '@/utils/request'
 import Upload from '@/components/Upload/index'
+import VideoUpload from '@/components/Upload/video'
+import { mapGetters } from 'vuex';
 export default {
-  components: { Upload },
+  components: { Upload, VideoUpload },
   props: ['visible', 'type', 'formData', 'editType'],
   data() {
     return {
@@ -65,28 +73,38 @@ export default {
         { value: '操作系统', label: '操作系统' }
       ],
       rules: {
-        admin_name: [{ required: true, message: '请输入用户名' }],
-        name: [{ required: true, message: '请输入教师名' }],
-        password: [{ required: true, message: '请输入密码' }],
-        avatar: [{ required: true, message: '请选择头像' }]
+        video_name: [{ required: true, message: '请输入视频名称' }],
+        category: [{ required: true, message: '请选择分类' }],
+        video_pic: [{ required: true, message: '请选择海报' }],
+        video_path: [{ required: true, message: '请选择视频' }],
+        video_price: [{ required: true, message: '请输入价格' }],
+        video_intro: [{ required: true, message: '请输入视频简介' }]
       }
     }
+  },
+  computed: {
+    ...mapGetters(['id'])
   },
   methods: {
     handleCancel() {
       this.$emit('update:visible', false)
       this.$refs['cloneData'].resetFields()
       this.$refs.upload.$refs.upload.clearFiles()
+      this.$refs.address.$refs.address.clearFiles()
     },
     handlePath(path) {
-      this.cloneData.avatar = path
+      this.cloneData.video_pic = path
+    },
+    handleVideoAddress(path) {
+      this.cloneData.video_path = path
     },
     handleSave(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           this.loading = true
-          const params = this.cloneData
-          const res = this.type === 'edit' ? await request.post('/api/admin/update', params) : await request.post('/api/admin/insert', params)
+          const params = this.type === 'edit' ? { ...this.cloneData } : { ...this.cloneData, adminId: this.id }
+          console.log(params)
+          const res = this.type === 'edit' ? await request.post('/api/video/update', params) : await request.post('/api/video/insert', params)
           const { code, msg } = res
           code === 200 ? this.$message({ message: msg, type: 'success' }) : this.$message({ message: msg, type: 'warning' })
           this.$emit('update:visible', false)
@@ -99,13 +117,13 @@ export default {
       })
     },
     openDialog(data) {
-      this.cloneData = { ...this.formData }
+      this.cloneData = { ...this.formData, video_price: 0 }
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 .el-dialog {
     background-color: #eaedfd;
 }
@@ -117,5 +135,11 @@ export default {
     background: rgb(60, 196, 196);
     border-radius: 10px;
     border: 0px;
+}
+.textarea {
+  width: 100%;
+  .el-textarea {
+    width: 545px;
+  }
 }
 </style>

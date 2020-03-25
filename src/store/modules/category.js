@@ -5,9 +5,9 @@ const state = {
   golang: '',
   rust: 'danger',
   swift: 'danger',
-  php: 'success',
+  php: 'success', 
   rubby: 'danger'
-};
+}
 
 export default {
   namespaced: true,
