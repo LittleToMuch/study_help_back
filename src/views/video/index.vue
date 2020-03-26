@@ -6,21 +6,21 @@
       style="width: 100%">
       <el-table-column
         label="Id"
-        width="100">
+        width="50">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.row.id }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="视频名"
-        width="140">
+        width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.video_name }}</span>
         </template>
       </el-table-column>
       <el-table-column
         label="视频类别"
-        width="140">
+        width="120">
         <template slot-scope="scope">
           <el-tag type="success">{{ scope.row.category }}</el-tag>
         </template>
@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column
         label="视频价格"
-        width="130">
+        width="100">
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ '￥' + scope.row.video_price }}</span>
         </template>
